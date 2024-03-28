@@ -35,7 +35,11 @@ jobs:
             libgmp-dev \
             z3 \
             pkg-config \
-            zlib1g-dev
+            zlib1g-dev && \
+            opam init --disable-sandboxing --auto-setup && \
+            eval $(opam env) && \
+            opam repository add rems https://github.com/rems-project/opam-repository.git && \
+            opam install -y sail
 
           # Set an output parameter `uname` for use in subsequent steps
           run: |

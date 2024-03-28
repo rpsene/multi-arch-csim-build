@@ -39,7 +39,10 @@ jobs:
             opam init --disable-sandboxing --auto-setup && \
             eval $(opam env) && \
             opam repository add rems https://github.com/rems-project/opam-repository.git && \
-            opam install -y sail
+            opam install -y sail && \
+            git clone https://github.com/rpsene/sail-riscv && cd ./sail-riscv && \
+            eval $(opam env) && sail && ARCH=RV32 ENABLE_STATIC=1 make csim && ARCH=RV64 ENABLE_STATIC=1 make csim && \
+            ls ./c_emulator/
 
           # Set an output parameter `uname` for use in subsequent steps
           run: |

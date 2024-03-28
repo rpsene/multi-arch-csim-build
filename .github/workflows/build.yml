@@ -22,6 +22,21 @@ jobs:
           # a GitHub package registry.
           githubToken: ${{ secrets.GITHUBTOKEN }}
 
+          # The shell to run commands with in the container
+          shell: /bin/sh
+
+          install: |
+            apt-get upgrade -y && \
+            DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+            git \
+            opam \
+            build-essential \
+            device-tree-compiler \
+            libgmp-dev \
+            z3 \
+            pkg-config \
+            zlib1g-dev
+
           # Set an output parameter `uname` for use in subsequent steps
           run: |
             uname -a

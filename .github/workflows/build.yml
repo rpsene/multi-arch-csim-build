@@ -26,7 +26,7 @@ jobs:
           shell: /bin/sh
 
           install: |
-            apt-get upgrade -y && \
+            apt-get update -y && \
             DEBIAN_FRONTEND="noninteractive" apt-get install -y \
             git \
             opam \

@@ -25,6 +25,12 @@ jobs:
           # The shell to run commands with in the container
           shell: /bin/sh
 
+          setup: |
+            mkdir -p "${PWD}/artifacts"
+
+          dockerRunArgs: |
+            --volume "${PWD}/artifacts:/artifacts"
+
           install: |
             apt-get update -y && \
             DEBIAN_FRONTEND="noninteractive" apt-get install -y \
@@ -39,17 +45,15 @@ jobs:
             opam init --disable-sandboxing --auto-setup && \
             eval $(opam env) && \
             opam repository add rems https://github.com/rems-project/opam-repository.git && \
-            opam install -y sail && \
+            opam install -y sail
+
+          run: |
             git clone https://github.com/rpsene/sail-riscv && cd ./sail-riscv && \
             eval $(opam env) && sail && ARCH=RV32 ENABLE_STATIC=1 make csim && ARCH=RV64 ENABLE_STATIC=1 make csim && \
-            ls ./c_emulator/
+            ls ./c_emulator/ && \
+            cp ./c_emulator/riscv_sim_RV32 ../artifacts/riscv_sim_RV32_armv7 && \
+            cp ./c_emulator/riscv_sim_RV64 ../artifacts/riscv_sim_RV64_armv7
 
-          # Set an output parameter `uname` for use in subsequent steps
-          run: |
-            uname -a
-            echo ::set-output name=uname::$(uname -a)
-
-      - name: Get the output
-        # Echo the `uname` output parameter from the `runcmd` step
+      - name: Show the artifact
         run: |
-          echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
+          ls -al "${PWD}/artifacts"
